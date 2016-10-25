@@ -4,6 +4,7 @@ from pprint import pprint
 
 ImgIDs=sys.argv[1]
 inputfile="/home/c-nrong/VQA/question_answers.json"
+outpath="Ques/"
 with open(inputfile) as data_file:
 	data=json.load(data_file)
 #pprint(data)
@@ -35,7 +36,7 @@ for ix,line in enumerate(lines):
 	if img[0]["id"] != int(outID):
 		print "getQues.py: jsonID-"+str(img["id"])+" and imgID-"+outID+" are not same!" 
 		sys.exit()
-	outfile="Ques/q_"+outID+".txt"
+	outfile=outpath+"/q_"+outID+".txt"
 	for que in img[0]["qas"]:
 	   with open(outfile,'a') as f:	
 		f.write(que["question"]+'\n')

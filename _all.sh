@@ -8,7 +8,7 @@ imgIDs=$mPATH/ImgIDs.txt
 #./getImg.sh $imgPath $imgIDs
 
 ####################.generate question
-####----input: $imgIDs
+####----input: $imgIDs (sorted by number)
 ####----output: questions for all images("Ques/q_${imgID}.txt")
 #python genQues.py $imgIDs
 
@@ -32,10 +32,15 @@ do
 	#####----output: one txt(question.txt)
 	#cd /home/c-nrong/VQA/HieCoAttenVQA/
 	Question=${Question/\?/ \?}
-	th genAttenMap.lua "${imgPath}/${imgID}.jpg" "$Question"
-	tail -n 1 question.txt > "$mPATH/AttenMaps/${imgID}_AttenMap_${ii}.txt"
-	rm question.txt
-
+	#echo $Question
+	GRAYorRGB=`identify ${imgPath}/${imgID}.jpg | cut -d' ' -f6`
+	if [ $GRAYorRGB == "Gray" ];then
+		echo "${imgID}:${GRAYorRGB}" >> ${mPATH}/gray.txt
+		continue
+	fi
+	th genAttenMap.lua "${imgPath}/${imgID}.jpg" "$Question" $imgID
+	tail -n 1 "question${imgID}.txt" > "$mPATH/AttenMaps/${imgID}_AttenMap_${ii}.txt"
+	rm "question${imgID}.txt"
 	#if [ $ii -eq 8 ];then	echo `date` && exit -1; 	fi
 
 	#################.draw attenmap+oriImg
